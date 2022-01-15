@@ -1,0 +1,54 @@
+%%HTML 
+<script>
+    function jupyter_cell_refresh(cell) {
+        if( cell.jupyter ) return;
+        cell.jupyter = true;
+        
+        var divElement = document.createElement('DIV');            
+        cell.parentNode.insertBefore( divElement, cell.nextSibling );
+        divElement.style.textAlign = 'right';
+        var aElement = document.createElement('A');
+        divElement.appendChild(aElement);
+        aElement.href='#'
+        aElement.jupyter = cell;
+        aElement.setAttribute( 'onclick', "jupyter_toggle(this); return false;" );
+
+        cell.style.visibility='hidden';
+        cell.style.position='absolute';
+        aElement.innerHTML = '[Show]';        
+                
+    }
+    function jupyet_refresh() {                
+        if( document.querySelector('.code_cell .input') == null ) {            
+            var jupterCells = document.querySelectorAll('.jp-InputArea')
+            jupterCells[0].style.visibility = 'hidden';
+            jupterCells[0].style.position = 'absolute';                        
+            for( var vCounter = 1; vCounter < jupterCells.length; vCounter++ ) {
+                jupyter_cell_refresh(jupterCells[i].parentNode)
+            }
+            window.onload = jupyet_refresh;
+        }                 
+        else {
+            var jupterCells = document.querySelectorAll('.code_cell .input')
+            for( var vCounter = 0; vCounter < jupterCells.length; vCounter++ ) {
+                jupyter_cell_refresh(jupterCells[vCounter])
+            }            
+            window.setTimeout( jupyet_refresh, 1000 )
+        }        
+    }
+    
+    function jupyter_toggle(aElement) {
+        if( aElement.jupyter.style.visibility=='hidden' ) {
+            aElement.jupyter.style.visibility='visible';        
+            aElement.jupyter.style.position='';
+            aElement.innerHTML = '[Hide]]';
+        }
+        else {
+            aElement.jupyter.style.visibility='hidden';        
+            aElement.jupyter.style.position='absolute';
+            aElement.innerHTML = '[Show]';
+        }
+    }
+    
+    jupyet_refresh()
+</script>
